@@ -2,6 +2,8 @@ package me.basehub.templatecompose
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
+import me.basehub.templatecompose.core.auth.AuthManager
 import timber.log.Timber
 
 /**
@@ -9,6 +11,8 @@ import timber.log.Timber
  */
 @HiltAndroidApp
 class TemplateApplication : Application() {
+    @Inject lateinit var authManager: AuthManager
+
     override fun onCreate() {
         super.onCreate()
 
@@ -16,5 +20,8 @@ class TemplateApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        // Restore the saved session once at process startup; the root UI will observe its state.
+        authManager.start()
     }
 }
