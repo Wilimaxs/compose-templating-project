@@ -1,4 +1,4 @@
-package me.basehub.templatecompose.core.local.pref
+package me.basehub.templatecompose.core.local.storage
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataStoreManager @Inject constructor(
+class StorageManager @Inject constructor(
     @PublishedApi internal val dataStore: DataStore<Preferences>,
     @PublishedApi internal val json: Json
 ) {

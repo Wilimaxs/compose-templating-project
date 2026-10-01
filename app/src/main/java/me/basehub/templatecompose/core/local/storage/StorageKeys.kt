@@ -1,4 +1,4 @@
-package me.basehub.templatecompose.core.local.pref
+package me.basehub.templatecompose.core.local.storage
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
  * Sample keys for DataStoreManager.save/get and saveObject/getObject.
  * TODO(template): Rename or remove these keys when adapting the starter to your app.
  */
-object PreferenceKeys {
+object StorageKeys {
     // Boolean example: DataStoreManager.save/get.
     val DARK_MODE_ENABLED = booleanPreferencesKey("dark_mode_enabled")
 
