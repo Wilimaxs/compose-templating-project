@@ -1,6 +1,6 @@
 package me.basehub.templatecompose.core.auth
 
-import me.basehub.templatecompose.core.remote.dto.UserDto
+import me.basehub.templatecompose.core.remote.dto.EmployeeDto
 
 /** Identifies how the current session was created. */
 enum class AuthMode {
@@ -12,6 +12,6 @@ enum class AuthMode {
 sealed interface AuthState {
     data object Loading : AuthState
     data object Unauthenticated : AuthState
-    data class Authenticated(val user: UserDto?, val mode: AuthMode) : AuthState
+    data class Authenticated(val employee: EmployeeDto?, val mode: AuthMode) : AuthState
     data class Error(val message: String) : AuthState
 }

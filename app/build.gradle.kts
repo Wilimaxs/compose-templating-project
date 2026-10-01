@@ -28,16 +28,17 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix =
                 "-alpha.1" // Internal = alpha, revisi alpha +1, external = beta, revisi beta +1
-            // TODO(template): Update this URL if you want to use a different API endpoint.
-            buildConfigField("String", "BASE_URL", "\"https://dummyjson.com/\"")
+            // Use the POS backend running on the development computer from Android Emulator.
+            // TODO(template): Replace this URL for a physical device or another debug backend.
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8000/api/v1/\"")
         }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             versionNameSuffix =
                 "-alpha.1" // Internal = alpha, revisi alpha +1, external = beta, revisi beta +1
-            // TODO(template): Update this URL if you want to use a different API endpoint.
-            buildConfigField("String", "BASE_URL", "\"https://dummyjson.com/\"")
+            // TODO(template): Replace this HTTPS placeholder with your production API URL.
+            buildConfigField("String", "BASE_URL", "\"https://api.example.com/api/v1/\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

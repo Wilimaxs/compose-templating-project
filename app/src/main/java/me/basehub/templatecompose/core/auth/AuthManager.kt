@@ -18,7 +18,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.basehub.templatecompose.core.local.secure.SecureStorageManager
 import me.basehub.templatecompose.core.local.storage.StorageManager
-import me.basehub.templatecompose.core.remote.dto.UserDto
+import me.basehub.templatecompose.core.remote.dto.EmployeeDto
 import timber.log.Timber
 
 /** Owns the app-wide session and restores it when the application starts. */
@@ -47,12 +47,15 @@ class AuthManager @Inject constructor(
         try {
             val token = secureStorage.getToken()
             val bypassEnabled = storage.get(BYPASS_ENABLED, false).first()
-            val cachedUser = storage.getObject<UserDto>(CACHED_USER).first()
+            val cachedEmployee = storage.getObject<EmployeeDto>(CACHED_EMPLOYEE).first()
 
             // TODO(template): Ask your backend to validate or refresh an API token when available.
             mutableState.value = when {
-                !token.isNullOrBlank() -> AuthState.Authenticated(cachedUser, AuthMode.API)
-                bypassEnabled -> AuthState.Authenticated(cachedUser ?: demoUser(), AuthMode.BYPASS)
+                !token.isNullOrBlank() -> AuthState.Authenticated(cachedEmployee, AuthMode.API)
+                bypassEnabled -> AuthState.Authenticated(
+                    cachedEmployee ?: demoEmployee(),
+                    AuthMode.BYPASS
+                )
                 else -> AuthState.Unauthenticated
             }
         } catch (error: CancellationException) {
@@ -63,27 +66,27 @@ class AuthManager @Inject constructor(
         }
     }
 
-    /** Persist an API session after login; the token is stored separately from the user. */
-    suspend fun saveApiSession(token: String, user: UserDto?) = sessionMutex.withLock {
+    /** Persist an API session after login; the token is stored separately from the employee. */
+    suspend fun saveApiSession(token: String, employee: EmployeeDto?) = sessionMutex.withLock {
         require(token.isNotBlank()) { "The login token must not be blank." }
 
         storage.save(BYPASS_ENABLED, false)
-        if (user == null) {
-            storage.remove(CACHED_USER)
+        if (employee == null) {
+            storage.remove(CACHED_EMPLOYEE)
         } else {
-            storage.saveObject(CACHED_USER, user)
+            storage.saveObject(CACHED_EMPLOYEE, employee)
         }
         secureStorage.setToken(token)
-        mutableState.value = AuthState.Authenticated(user, AuthMode.API)
+        mutableState.value = AuthState.Authenticated(employee, AuthMode.API)
     }
 
     /** Enter the starter's hardcoded session without creating a backend token. */
     suspend fun useBypassSession() = sessionMutex.withLock {
-        val user = demoUser()
+        val employee = demoEmployee()
         secureStorage.clearToken()
-        storage.saveObject(CACHED_USER, user)
+        storage.saveObject(CACHED_EMPLOYEE, employee)
         storage.save(BYPASS_ENABLED, true)
-        mutableState.value = AuthState.Authenticated(user, AuthMode.BYPASS)
+        mutableState.value = AuthState.Authenticated(employee, AuthMode.BYPASS)
     }
 
     /** End either kind of session without clearing unrelated app preferences. */
@@ -102,18 +105,22 @@ class AuthManager @Inject constructor(
         storage.save(BYPASS_ENABLED, false)
         secureStorage.clearToken()
         mutableState.value = AuthState.Unauthenticated
-        storage.remove(CACHED_USER)
+        storage.remove(CACHED_EMPLOYEE)
     }
 
     // TODO(template): Replace this demo profile with the sample data your starter should show.
-    private fun demoUser() = UserDto(
-        id = 1,
-        name = "suitmedian",
-        email = "demo@suitmedia.com"
+    private fun demoEmployee() = EmployeeDto(
+        employeeCode = "DEMO-EMPLOYEE",
+        storeCode = "DEMO-STORE",
+        storeName = "Demo Store",
+        name = "Demo Employee",
+        phone = "081200000000",
+        position = "Demo",
+        isOwner = true
     )
 
     private companion object {
-        private val CACHED_USER = stringPreferencesKey("auth_cached_user_json")
+        private val CACHED_EMPLOYEE = stringPreferencesKey("auth_cached_employee_json")
         private val BYPASS_ENABLED = booleanPreferencesKey("auth_bypass_enabled")
     }
 }

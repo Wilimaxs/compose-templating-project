@@ -42,14 +42,14 @@ suspend fun <T : Any> safeApiCall(
                     )
                 )
 
-                body.success == false -> NetworkResult.Error(
+                body.status?.equals("success", ignoreCase = true) == false -> NetworkResult.Error(
                     ErrorMapper.fromHttpResponse(response, body.message)
                 )
 
-                body.success != true -> NetworkResult.Error(
+                body.status == null -> NetworkResult.Error(
                     NetworkException(
                         NetworkException.Type.INVALID_RESPONSE,
-                        "Response success status is missing.",
+                        "Response status is missing.",
                         response.code()
                     )
                 )
