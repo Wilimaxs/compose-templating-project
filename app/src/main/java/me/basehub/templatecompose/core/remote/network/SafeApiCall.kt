@@ -21,7 +21,6 @@ suspend fun <T : Any> safeApiCall(
         )
 
         response.code() == 204 || response.code() == 205 -> {
-            // Pass Unit as noContentValue when a successful endpoint has no response body.
             noContentValue?.let { NetworkResult.Success(it) }
                 ?: NetworkResult.Error(
                     NetworkException(

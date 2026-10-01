@@ -1,10 +1,9 @@
-package me.basehub.templatecompose.core.remote.network
+package me.basehub.templatecompose.core.di
 
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import kotlinx.serialization.json.Json
 import me.basehub.templatecompose.BuildConfig
 import okhttp3.MediaType.Companion.toMediaType
@@ -13,6 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
