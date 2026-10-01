@@ -3,7 +3,7 @@ package me.basehub.templatecompose.core.remote.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// TODO(template): DummyJSON uses endpoint-specific response bodies; use matching DTOs for those endpoints.
+// TODO(template): Match this response envelope to the format used by your backend.
 @Serializable
 data class ApiResponseDto<T>(
     @SerialName("success")
