@@ -14,35 +14,30 @@ android {
         applicationId = "me.basehub.templatecompose"
         minSdk = 28
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 1 // Up this number avery distribution of the app
+        versionName =
+            "1.0.0" // Up this number every after app distribution and want to update the app
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // Select the API environment at build time without adding separate app entry points.
-    flavorDimensions += "environment"
-    productFlavors {
-        create("dev") {
-            dimension = "environment"
-            // TODO(template): Replace with the development API URL for your app.
-            buildConfigField("String", "API_BASE_URL", "\"https://dummyjson.com/\"")
-        }
-        create("staging") {
-            dimension = "environment"
-            // TODO(template): Replace with the staging API URL for your app.
-            buildConfigField("String", "API_BASE_URL", "\"https://dummyjson.com/\"")
-        }
-        create("production") {
-            dimension = "environment"
-            // TODO(template): Replace with the production API URL for your app.
-            buildConfigField("String", "API_BASE_URL", "\"https://dummyjson.com/\"")
-        }
-    }
 
     buildTypes {
-        release {
+        debug {
             isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            versionNameSuffix =
+                "-alpha.1" // Internal = alpha, revisi alpha +1, external = beta, revisi beta +1
+            // TODO(template): Update this URL if you want to use a different API endpoint.
+            buildConfigField("String", "BASE_URL", "\"https://dummyjson.com/\"")
+        }
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            versionNameSuffix =
+                "-alpha.1" // Internal = alpha, revisi alpha +1, external = beta, revisi beta +1
+            // TODO(template): Update this URL if you want to use a different API endpoint.
+            buildConfigField("String", "BASE_URL", "\"https://dummyjson.com/\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -67,51 +62,65 @@ kotlin {
 }
 
 dependencies {
+    // Core & Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    // Compose UI
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    // Provide lifecycle-aware screen state and navigation for future examples.
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.kotlinx.coroutines.android)
-    // Provide Hilt-managed ViewModels for Compose destinations.
+
+    // Testing & Debugging
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
-    // Provide a system-compatible splash screen and a shared logging API.
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.timber)
-
-    // Provide an API stack; examples can still use hardcoded data without it.
+    // Retrofit & Network
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
 
-    // Provide small preferences, structured cache, and Compose pagination.
-    implementation(libs.androidx.datastore.preferences)
+    // Room Database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.paging)
+
+    // Utilities
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.timber)
+
+    // Datastore
+    implementation(libs.androidx.datastore.preferences)
+
+    // Carautines (Non Blocking)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Pagination
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
-    // Provide biometric unlock and remote images for optional feature examples.
+    // Auth
     implementation(libs.androidx.biometric)
+
+    // Image Loading
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
 }
