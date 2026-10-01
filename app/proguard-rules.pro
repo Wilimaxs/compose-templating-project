@@ -1,4 +1,7 @@
 # Add project specific ProGuard rules here.
+# Keep the endpoint marker visible when Retrofit methods are inspected in release builds.
+-keepattributes RuntimeVisibleAnnotations
+-keep class me.basehub.templatecompose.core.remote.network.NoAuth
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #

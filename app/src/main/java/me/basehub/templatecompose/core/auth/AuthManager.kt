@@ -88,6 +88,17 @@ class AuthManager @Inject constructor(
 
     /** End either kind of session without clearing unrelated app preferences. */
     suspend fun signOut() = sessionMutex.withLock {
+        clearSessionLocked()
+    }
+
+    /** Sign out only when a 401 rejected the access token that is still active. */
+    suspend fun signOutIfCurrentToken(rejectedToken: String): Boolean = sessionMutex.withLock {
+        if (secureStorage.getToken() != rejectedToken) return@withLock false
+        clearSessionLocked()
+        true
+    }
+
+    private suspend fun clearSessionLocked() {
         storage.save(BYPASS_ENABLED, false)
         secureStorage.clearToken()
         mutableState.value = AuthState.Unauthenticated

@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import me.basehub.templatecompose.BuildConfig
+import me.basehub.templatecompose.core.remote.network.AccessTokenInterceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,7 +18,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
 
     // Show logging for http requests and responses only in debug mode
     @Provides
@@ -36,9 +36,11 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        accessTokenInterceptor: AccessTokenInterceptor,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(accessTokenInterceptor)
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
