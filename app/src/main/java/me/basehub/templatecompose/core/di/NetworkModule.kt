@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import me.basehub.templatecompose.BuildConfig
+import me.basehub.templatecompose.core.remote.api.ApiService
 import me.basehub.templatecompose.core.remote.network.AccessTokenInterceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -68,12 +69,9 @@ object NetworkModule {
             .build()
     }
 
-    // Implementasi Api Service
-//    @Provides
-//    @Singleton
-//    fun provideApiService(
-//        retrofit: Retrofit
-//    ): ApiService {
-//        return retrofit.create(ApiService::class.java)
-//    }
+    // Expose the typed POS endpoints to injected repositories.
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 }
